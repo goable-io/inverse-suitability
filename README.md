@@ -4,10 +4,13 @@
 
 [![reproduce](https://github.com/goable-io/inverse-suitability/actions/workflows/reproduce.yml/badge.svg)](https://github.com/goable-io/inverse-suitability/actions/workflows/reproduce.yml)
 
-This repository contains the paper (LaTeX + PDF) and a **self-contained,
-one-command reproducibility package**. It is a *methodology* paper validated by
-**synthetic recovery only** — there is no real-rider data here, and none is
-needed to reproduce every number and figure in the paper.
+This repository is the **canonical implementation of the Inverse Suitability
+method** — the continuous-item IRT calibration that Goable's production engine
+depends on (the monorepo consumes this package as `inverse-suitability`) — together
+with the **paper** (LaTeX + PDF) and a **self-contained, one-command
+reproducibility package**. The method is public and reproducible; it is validated
+here by **synthetic recovery only** — there is no real-rider data in this repo, and
+none is needed to reproduce every number and figure in the paper.
 
 Suitability scores for outdoor activities conflate two things: how hard a
 condition intrinsically is, and how skilled the person facing it is. Inverse
@@ -61,13 +64,18 @@ src/inverse_suitability/   the latent-factor (M4) method + synthetic data genera
 paper/                  LaTeX sources, compiled PDF, and reproducibility scripts
 ```
 
-## Scope and honesty
+## What this is (and isn't)
 
-This is the **public reproducibility subset** of Goable's calibration engine. It
-contains only the latent-factor method and its **synthetic** data-generating
-process — enough to reproduce the paper. It does **not** contain the production
-scoring engine, the real behavioural-outcome cohorts, or any fitted difficulty
-atlas. The paper makes no empirical claim on real riders; its validation is the
+This is the **canonical implementation** of the Inverse Suitability calibration —
+Goable's production engine imports it directly as the single source of truth for
+this method, so it is not a throwaway demo. What ships here is the *method* and a
+**synthetic** data-generating process that exercises it end-to-end.
+
+It does **not** contain: real behavioural-outcome data; the full production
+calibration pipeline (the L3 ensemble fitters, IPW correction, drift monitoring
+that wrap this method in the private engine); or any fitted difficulty atlas. The
+method is public and reproducible; the data and the surrounding production system
+are not. The paper makes no empirical claim on real riders — its validation is the
 synthetic recovery study reproduced above.
 
 ## License
