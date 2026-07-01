@@ -50,7 +50,7 @@ asserts the recovered values stay within the tolerances the paper claims.
 ## What's here
 
 ```
-inverse_suitability/     the latent-factor (M4) method + synthetic data generator
+src/inverse_suitability/   the latent-factor (M4) method + synthetic data generator
   latent_math.py          link function + ground-truth difficulty
   synthetic_latent.py     synthetic two-factor cohort (known θ and δ)
   identification.py        rider×condition connectivity guard
@@ -72,7 +72,7 @@ synthetic recovery study reproduced above.
 
 ## License
 
-- **Code** (`inverse_suitability/`, `paper/reproducibility/`) — MIT (`LICENSE`).
+- **Code** (`src/inverse_suitability/`, `paper/reproducibility/`) — MIT (`LICENSE`).
 - **Paper text** (`paper/` .tex, PDF, figures) — CC BY 4.0 (`paper/LICENSE`).
 
 ## Citation
