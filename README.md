@@ -2,7 +2,7 @@
 
 **Identifying Condition Difficulty and Rider Skill from Behavioural Outcomes via Continuous-Item Response Theory**
 
-[![reproduce](https://github.com/goable-io/inverse-suitability-paper/actions/workflows/reproduce.yml/badge.svg)](https://github.com/goable-io/inverse-suitability-paper/actions/workflows/reproduce.yml)
+[![reproduce](https://github.com/goable-io/inverse-suitability/actions/workflows/reproduce.yml/badge.svg)](https://github.com/goable-io/inverse-suitability/actions/workflows/reproduce.yml)
 
 This repository contains the paper (LaTeX + PDF) and a **self-contained,
 one-command reproducibility package**. It is a *methodology* paper validated by
@@ -84,6 +84,6 @@ synthetic recovery study reproduced above.
             from Behavioural Outcomes via Continuous-Item Response Theory},
   year   = {2026},
   note   = {arXiv preprint (forthcoming)},
-  url    = {https://github.com/goable-io/inverse-suitability-paper}
+  url    = {https://github.com/goable-io/inverse-suitability}
 }
 ```
