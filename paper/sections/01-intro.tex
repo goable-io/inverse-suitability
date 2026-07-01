@@ -1,0 +1,63 @@
+\section{Introduction}
+\label{sec:intro}
+
+Operational decision support for outdoor activities rests on \emph{suitability
+scoring}: a mapping from the environmental state---wind speed, wave height,
+thermal lift, snow stability---to a bounded score or a go/no-go verdict. In
+practice these mappings are expert-defined curves, one per activity and per
+physical dimension, calibrated by domain specialists and, increasingly, refined
+against observed outcomes. A kitesurfing wind curve peaks near a sweet spot and
+falls off toward calm and storm; a ski-touring stability curve gates on
+avalanche risk. The score is then a composition of such curves.
+
+A single suitability curve, however, silently conflates two quantities that a
+decision-maker needs to keep apart. The first is the \emph{intrinsic difficulty}
+of a condition: how objectively demanding a given wind or sea state is for the
+activity, independent of who is attempting it. The second is the \emph{skill} of
+the person facing that condition. When a curve is fit to behavioural outcomes---
+did the session go well, did the rider go out at all---it absorbs both: the
+apparent ``suitability'' of $22$ knots at a given spot reflects not only how hard
+$22$ knots is, but also the skill distribution of whoever happens to ride there.
+Two spots with identical fitted suitability curves can therefore have radically
+different intrinsic difficulty, masked by different clienteles. No existing
+observation network---marine, atmospheric, cryospheric---measures the difficulty
+term in isolation, because none carries the human-decision layer needed to
+identify it.
+
+\paragraph{The gap.} What is missing is a way to \emph{separate} intrinsic
+condition difficulty from population skill using the outcome data that decision
+platforms already collect, and to do so with an identified, interpretable model
+rather than a black box. The methodological obstacle is that conditions are not
+discrete test items: wind speed is a continuous axis, not a yes/no question, so
+the classical psychometric machinery for separating item difficulty from person
+ability does not apply off the shelf.
+
+\paragraph{Contributions.} This paper makes three contributions.
+\begin{enumerate}
+  \item \textbf{Continuous-item IRT for environmental conditions.} We extend
+    explanatory item response theory---which already lets item difficulty depend
+    on covariates \citep{fischer1973,deboeck2004}---from discrete item features to
+    a \emph{continuous physical driver}, modelling difficulty $\delta(x,s)$ as a
+    smooth, physically anchored function of a metric $x$ at site $s$
+    (Section~\ref{sec:model}). The item bank is the weather.
+  \item \textbf{Identifiability and synthetic recovery.} We give the conditions
+    under which rider skill and condition difficulty separate---a connected
+    rider${\times}$condition incidence graph plus location/scale anchoring---and a
+    deterministic marginal-maximum-likelihood estimator with a documented
+    single-curve fallback when identification fails (Section~\ref{sec:ident}). We
+    validate by synthetic recovery: on a reference cohort the model recovers
+    latent skill at correlation $0.96$ and locates the difficulty minimum within
+    $\pm 3$ units of ground truth (Section~\ref{sec:recovery}).
+  \item \textbf{The difficulty atlas.} The recovered difficulty function defines a
+    measurable, site-level construct---an \emph{intrinsic difficulty atlas}---that
+    is anonymous, joinable to existing meteorological archives, and captures a
+    quantity those archives do not (Section~\ref{sec:atlas}).
+\end{enumerate}
+
+\paragraph{Scope.} This is a methodology paper. Its validation is a synthetic
+recovery study: cohorts are generated with known ground-truth skill and
+difficulty, and the estimator is shown to recover them. We make \emph{no}
+empirical claim on real riders; no proprietary observations are used anywhere,
+and every number in the paper reproduces from a single command on synthetic data
+(Section~\ref{sec:recovery}). Empirical validation on field cohorts is future
+work (Section~\ref{sec:discussion}).

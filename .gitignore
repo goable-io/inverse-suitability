@@ -1,0 +1,27 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.toc
+*.fls
+*.fdb_latexmk
+# NOTE: paper/main.pdf IS committed (so readers get the paper without building).
+
+# Reproducibility run outputs (stats.json etc.)
+paper/reproducibility/out/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+uv.lock
+
+# OS
+.DS_Store
+
+# stray root demo output
+/out/

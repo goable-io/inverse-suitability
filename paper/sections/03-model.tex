@@ -1,0 +1,83 @@
+\section{The model}
+\label{sec:model}
+
+\subsection{Outcomes and the link function}
+
+The unit of data is an outcome triple $(\rider, \metric, y)$, optionally indexed
+by a site $\site$: rider $\rider$ experienced a condition summarised by the metric
+value $\metric$ (for example, wind speed) at site $\site$ and produced a binary
+outcome $y \in \{0,1\}$---a good session versus not, or a go versus no-go. We
+model the outcome probability with a two-parameter latent factorisation,
+\begin{equation}
+  \label{eq:model}
+  P(y{=}1 \mid \rider, \metric, \site)
+    = \sigmoid\!\Big( a(\metric,\site)\,\big(\skill_\rider - \diff(\metric,\site)\big) \Big),
+  \qquad \sigmoid(z) = \frac{1}{1+e^{-z}},
+\end{equation}
+with three latent objects:
+\begin{itemize}
+  \item $\skill_\rider \in \mathbb{R}$ --- the \emph{latent skill} of rider
+    $\rider$, one scalar per rider (per pseudonym), identified up to a
+    location/scale convention (Section~\ref{sec:ident});
+  \item $\diff(\metric,\site)$ --- the \emph{latent difficulty} of the condition:
+    how objectively hard the metric value $\metric$ is at site $\site$, a smooth
+    function of $\metric$;
+  \item $a(\metric,\site) > 0$ --- the \emph{discrimination}: how sharply the
+    condition separates riders of different skill. In the Phase-1 form used
+    throughout this paper, $a$ is a single scalar.
+\end{itemize}
+Equation~\eqref{eq:model} is the two-parameter logistic IRT model with the item
+difficulty $b_i$ replaced by a function $\diff(\metric,\site)$ of a continuous
+driver. Higher skill or lower difficulty raises the success probability; the two
+enter only through their difference $\skill_\rider - \diff(\metric,\site)$, a fact
+with consequences for identification (Section~\ref{sec:ident}).
+
+\subsection{Difficulty as a continuous item}
+
+Classical IRT difficulty is a per-item scalar because test items are discrete.
+Environmental conditions are not: the metric $\metric$ is a continuum, so we model
+$\diff(\metric,\site)$ as a smooth function---a spline (or, with full Bayesian
+inference, a Gaussian process) over $\metric$---rather than a collection of
+independent per-condition constants. Two properties make this well-posed. First,
+smoothness lets neighbouring conditions share statistical strength, so a condition
+observed only a few times still receives a sensible difficulty. Second, the
+difficulty function is \emph{anchored to the physics-derived expert curve as its
+prior}, which serves two distinct purposes: it fixes the difficulty scale in
+interpretable, physical units, and it acts as a shrinkage prior toward which
+sparsely observed conditions regress. This anchoring is about \emph{units and
+regularisation}, not identification: $\diff$ is already identified once the skill
+distribution is standardised (Section~\ref{sec:ident}); without the anchor it
+would still be identified, but expressed only on an arbitrary scale.
+
+\subsection{Recovering the single suitability curve as a marginal}
+\label{sec:marginal}
+
+The model in \eqref{eq:model} is strictly more general than today's single
+suitability curve, and reduces to it exactly. Let $p(\skill)$ be the population
+skill distribution. The single suitability curve is the marginal of
+\eqref{eq:model} over that population,
+\begin{equation}
+  \label{eq:marginal}
+  \mathrm{curve}(\metric)
+    = \mathbb{E}_{\skill}\!\left[\, \sigmoid\!\big(a(\metric)(\skill - \diff(\metric))\big)\,\right]
+    = \int \sigmoid\!\big(a(\metric)(\skill - \diff(\metric))\big)\, p(\skill)\, d\skill .
+\end{equation}
+Integrating skill out recovers precisely the population-level curve that a
+conventional calibrator would fit. This is not merely an asymptotic
+correspondence; in our implementation it is a regression test---the fitted
+model's marginal is checked against a single-curve fit on the same data
+(Section~\ref{sec:recovery}, the \emph{marginal matches single curve} gate).
+Consequently, adopting Inverse Suitability adds a dimension to an existing
+scoring engine; it does not fork it. Where a cell lacks the data to identify the
+latent structure, the model falls back to \eqref{eq:marginal}, which is the
+behaviour the engine already has.
+
+\subsection{Skill-conditioned scoring}
+
+For a chosen skill level $\skill$---for instance a population quantile mapped to
+beginner, intermediate, or expert---the skill-conditioned suitability curve is
+$\metric \mapsto \sigmoid\!\big(a(\metric)(\skill - \diff(\metric))\big)$. This is
+the per-level scoring surface: the same condition is scored differently for a
+beginner and an expert, while the underlying difficulty $\diff$ is invariant
+(Figure~\ref{fig:atlas}). The skill level is treated as an explicit input, not
+inferred from identity---a boundary we return to in Section~\ref{sec:governance}.

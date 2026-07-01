@@ -1,0 +1,49 @@
+\section{The difficulty atlas}
+\label{sec:atlas}
+
+The estimator returns two kinds of object. One is per-rider: the skill posteriors
+$\hat\skill_\rider$. The other is a property of the environment: the difficulty
+function $\hat\diff(\metric,\site)$ itself. Collected across sites and dimensions,
+the latter forms what we call the \emph{intrinsic difficulty atlas}---a
+site-level, anonymous map of how hard each condition is, net of who rides it.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.86\linewidth]{difficulty-atlas.pdf}
+  \caption{The construct the atlas measures. \emph{Bottom:} the intrinsic
+  difficulty function $\diff(\metric)$ (dashed), minimised at the ground-truth
+  optimum $\metric^\star = 18$~kn; the recovered $\hat\diff(\metric)$ is overlaid
+  where available. \emph{Top:} three skill-conditioned suitability curves
+  $\sigmoid(a(\skill - \diff(\metric)))$ for beginner ($\skill{=}{-}1$),
+  intermediate ($\skill{=}0$), and expert ($\skill{=}{+}1$). Skill shifts the
+  suitability curve while the difficulty beneath it is invariant: two operators
+  whose spots share the same $\diff$ but differ in clientele read different
+  suitability surfaces from the \emph{same} underlying difficulty. That
+  separation is what no meteorological observation network records. Figure
+  generated from code (Appendix~\ref{app:repro}).}
+  \label{fig:atlas}
+\end{figure}
+
+\subsection{Why the atlas is new}
+
+Existing observation networks---marine reanalyses, atmospheric mesonets,
+lightning-detection and air-quality networks, national avalanche services---
+densely cover the \emph{meteorological} state. What none of them holds is the
+quantity $\diff$ isolates: the intrinsic difficulty of a condition for a skilled
+human activity, separated from the population skill mix that otherwise confounds
+it. Suitability, as conventionally fit, is a blend of difficulty and clientele;
+$\diff$ is the difficulty term alone. Because it is anchored to a physical curve
+(Section~\ref{sec:model}), it is expressed in interpretable units and is
+\emph{joinable} to those same meteorological archives: for any site and condition,
+the atlas adds a difficulty coordinate the archives lack.
+
+\subsection{A measurable construct}
+
+The consequence is conceptual as much as practical. Two spots with identical
+fitted suitability curves can have very different intrinsic difficulty, masked by
+different clienteles; until the skill term is identified, they are
+indistinguishable. Inverse Suitability makes them distinguishable, and in doing so
+treats activity suitability---for the first time, to our knowledge---as a formal,
+measurable latent construct rather than an expert convention. The atlas is the
+artifact of that construct: a difficulty rating decoupled from who happens to be
+present, defined precisely enough to be estimated, reproduced, and audited.

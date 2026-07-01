@@ -1,0 +1,23 @@
+Suitability scoring for outdoor activities---kitesurfing, paragliding, ski
+touring---maps environmental conditions to a go/no-go verdict via expert-defined
+curves. These curves conflate two distinct quantities: the intrinsic difficulty
+of a condition and the skill of the person facing it. We introduce
+\emph{Inverse Suitability}, a continuous-item Item Response Theory (IRT) model
+that identifies both from behavioural outcomes alone. Each outcome is a triple
+(rider $r$, condition metric $x$ at site $s$, binary outcome $y$); we model
+$P(y{=}1) = \sigma\!\left(a\,(\theta_r - \delta(x,s))\right)$, where $\theta_r$ is
+latent rider skill, $\delta(x,s)$ is a latent difficulty function anchored to a
+physics-derived expert curve as its prior, and $a$ is a discrimination parameter.
+The formulation is strictly more general than a single suitability curve, which
+it recovers exactly when skill is integrated out under the population
+distribution. Parameters are estimated by marginal maximum likelihood with
+Gauss--Hermite quadrature; identification holds when the rider${\times}$condition
+incidence graph is connected, with a documented single-curve fallback otherwise.
+We validate via synthetic recovery: on a reference cohort ($80$ riders
+$\times\,30$ outcomes) the model recovers latent skill at $r = 0.96$, locates the
+difficulty minimum within $\pm 3$ units of ground truth, and improves held-out
+Brier Skill Score by $+0.33$ over the expert-curve baseline. The recovered
+difficulty function defines a measurable, site-level construct---an intrinsic
+difficulty atlas---that existing meteorological observation networks do not
+capture. All results reproduce from a single command on synthetic data, requiring
+no proprietary observations.

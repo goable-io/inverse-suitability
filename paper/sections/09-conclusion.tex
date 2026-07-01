@@ -1,0 +1,23 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+Suitability scores conflate two things a decision-maker must separate: how hard a
+condition is, and how skilled the person facing it is. We showed that a
+continuous-item Item Response Theory model---$P(y{=}1) = \sigmoid(a(\skill_\rider -
+\diff(\metric,\site)))$ with a smooth, physics-anchored difficulty function---
+identifies both from binary behavioural outcomes alone. The model is strictly more
+general than a single suitability curve, which it recovers exactly on marginalising
+skill; it is identified when the rider${\times}$condition incidence graph is
+connected, and it fails safely to the single curve when it is not. A synthetic
+recovery study confirms the estimator recovers latent skill at correlation $0.96$,
+locates the difficulty minimum within $\pm 3$ units of ground truth, and improves
+held-out Brier Skill Score by $+0.33$ over the expert-curve baseline---all
+reproducible from one command on synthetic data, with no proprietary observations.
+
+Beyond the estimator, the recovered difficulty function defines a measurable,
+anonymous, site-level construct---an intrinsic difficulty atlas---that existing
+meteorological networks do not capture and that is joinable to them. Establishing
+this construct, and the conditions under which it can be identified and governed,
+is the paper's lasting contribution. What remains is empirical: to fit the model
+to real cohorts as they accumulate and test whether human behaviour in the field
+follows the structure that, in simulation, it recovers so cleanly.

@@ -1,0 +1,43 @@
+name: reproduce
+
+# Proves the paper's headline numbers reproduce from code on synthetic data.
+# Runs the exact command a reviewer would run, then asserts the recovered
+# values land in the tolerances claimed in the paper.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  synthetic-recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Run latent-demo (synthetic recovery)
+        run: uv run --project . inverse-suitability latent-demo --out ./out --seed 0
+
+      - name: Assert recovery within the tolerances claimed in the paper
+        run: |
+          uv run --project . python - <<'PY'
+          import json, sys
+          s = json.load(open("out/stats.json"))
+          checks = {
+              "theta_recovery_corr >= 0.90": s["theta_recovery_corr"] >= 0.90,
+              "|difficulty_min_knots - 18| <= 3": abs(s["difficulty_min_knots"] - 18.0) <= 3.0,
+              "held_out_bss >= 0.05": s["held_out_bss"] >= 0.05,
+              "identification_ok": s["identification_ok"] is True,
+              "marginal_matches": s["marginal_matches"] is True,
+              "n_train == 2400": s["n_train"] == 2400,
+          }
+          print(json.dumps(s, indent=2))
+          bad = [k for k, ok in checks.items() if not ok]
+          for k, ok in checks.items():
+              print(("PASS" if ok else "FAIL"), k)
+          sys.exit(1 if bad else 0)
+          PY

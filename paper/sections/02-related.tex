@@ -1,0 +1,68 @@
+\section{Related work}
+\label{sec:related}
+
+Our contribution sits at the intersection of three literatures that have not
+previously been connected: psychometric latent-trait models, meteorological
+suitability indices, and latent-variable modelling in the environmental sciences.
+
+\paragraph{Item Response Theory.} IRT is the standard framework in psychometrics
+and educational measurement for separating the difficulty of a test item from the
+ability of a test-taker, using only binary (correct/incorrect) responses
+\citep{lord1968,rasch1960,embretson2000}. The two-parameter logistic model writes
+the probability of a correct response as
+$P(y{=}1) = \sigma\!\left(a_i(\theta_p - b_i)\right)$ for person ability
+$\theta_p$, item difficulty $b_i$, and item discrimination $a_i$
+\citep{birnbaum1968}. Parameters are classically estimated by marginal maximum
+likelihood, integrating over the person-ability distribution with an EM algorithm
+and Gauss--Hermite quadrature \citep{bock1981}; \citet{bakerkim2004} survey the
+estimation techniques. The classical model treats items as \emph{discrete}, each
+carrying its own scalar difficulty $b_i$ estimated from the responses to that
+item. Two established lines of work already relax this by letting difficulty
+depend on covariates: the linear logistic test model (LLTM), which writes item
+difficulty as a \emph{linear} combination of item features \citep{fischer1973},
+and the broader family of \emph{explanatory} item response models, which embed
+item and person effects in a generalized linear (or nonlinear) mixed model
+\citep{deboeck2004}. Our model is a continuous-item member of this explanatory
+family. It extends LLTM/explanatory IRT along four axes: (i) the difficulty
+covariate is a \emph{continuous physical driver} (e.g.\ wind speed), not a set of
+discrete item features; (ii) difficulty is a \emph{smooth} function (spline or
+Gaussian process) rather than LLTM's linear form; (iii) it is \emph{anchored to a
+physics-derived curve} so its units are physically interpretable; and (iv) it is
+applied to a new domain---environmental suitability---in which no two sessions
+share an identical item, so the discrete-item view is not merely inconvenient but
+inapplicable. Positioned this way, the contribution is an explicit extension of
+explanatory IRT to a continuous environmental driver, not a claim that difficulty
+has never been modelled as a function.
+
+\paragraph{Suitability and climate indices.} Environmental decision science has a
+long tradition of expert-defined indices that map weather to a rating. The Tourism
+Climate Index \citep{mieczkowski1985} combines thermal comfort, precipitation,
+sunshine, and wind into a single score; the Holiday Climate Index
+\citep{scott2016} refines the weighting scheme, and second-generation indices
+introduce climatic thresholds \citep{defreitas2008}. Activity-specific suitability
+curves used in operational scoring engines are of the same family: expert-weighted
+transformations of physical variables. These indices are, by construction,
+population- and expert-level: they express how suitable a condition is
+\emph{on average}, and none decomposes that rating into an intrinsic-difficulty
+term and a skill term. Inverse Suitability takes such an expert curve as the
+\emph{prior} for its difficulty function and then identifies the residual
+structure that the single curve cannot express.
+
+\paragraph{Latent-variable models in environmental science.} Latent-variable and
+random-effects models are widely used in ecology and environmental statistics---
+joint species distribution models built on latent factors \citep{warton2015},
+occupancy models that separate a latent ``true state'' from an imperfect detection
+process \citep{mackenzie2002}, and item-factor-analytic treatments of ordinal
+environmental data. The closest in spirit are occupancy models: our skill term
+plays a role analogous to a site- or observer-specific detection propensity,
+separating a latent property of interest from the process that reveals it. What is
+new relative to these is (i) anchoring the latent difficulty to a physics-derived
+curve so that it is measured in interpretable units rather than recovered only up
+to an arbitrary scale, and (ii) treating the difficulty as a smooth function of a
+continuous physical driver rather than a per-site constant.
+
+\paragraph{Forecast verification.} Our promotion metric, the Brier Skill Score,
+is standard in forecast verification \citep{brier1950}: it measures the
+mean-squared-error improvement of a probabilistic prediction over a reference. We
+use it to test whether skill-conditioning earns its added complexity against the
+single-curve baseline (Section~\ref{sec:recovery}).

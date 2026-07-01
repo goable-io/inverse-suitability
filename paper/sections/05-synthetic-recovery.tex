@@ -1,0 +1,78 @@
+\section{Synthetic recovery experiment}
+\label{sec:recovery}
+
+% Loads the recovery macros (\thetaRecoveryCorr, \difficultyMinKnots, ...) and the
+% results table -- both generated from stats.json. Input early so the macros are
+% defined before the prose cites them; the table floats to the top of a page.
+\input{sections/results.tex}
+
+Because no real cohort is used, the validity of the method rests on a
+\emph{synthetic recovery} study: we generate data from a known ground truth, fit
+the model, and measure how well it recovers that truth. This is the standard
+validation for a methods paper, and it is the same role a simulation study plays
+throughout statistics---it isolates the estimator's behaviour from the confounds
+of any particular dataset.
+
+\subsection{Data-generating process}
+\label{sec:dgp}
+
+The generator draws a two-factor cohort with \emph{known} skill and difficulty.
+Ground-truth skills are $\skill_\rider \sim \mathcal{N}(0,1)$, one per rider. The
+ground-truth difficulty is a parabola in difficulty space,
+\begin{equation}
+  \label{eq:dgp-delta}
+  \diff(\metric) = \left(\frac{\metric - \metric^\star}{w}\right)^{2} + f,
+  \qquad \metric^\star = 18~\text{kn},\; w = 8,\; f = -1,
+\end{equation}
+so that difficulty is \emph{minimised at the ground-truth optimum
+$\metric^\star = 18$~knots} and rises symmetrically toward calm and storm---a
+single-peaked suitability profile once passed through the link. Each rider is
+observed across conditions drawn uniformly over $[3, 35]$ knots (guaranteeing a
+connected incidence graph, Section~\ref{sec:graph}), and outcomes are Bernoulli
+draws from \eqref{eq:model} with \emph{true discrimination}
+$a_{\text{true}} = 2.0$. The reference cohort has $80$ riders $\times\,30$
+outcomes each. These parameters---$\metric^\star = 18$~kn, $a_{\text{true}} = 2.0$,
+and the cohort shape---are the ground truth supplied to the \emph{generator};
+they are never supplied to the \emph{fit}. The recovered quantities reported below
+are what the estimator infers from the outcomes alone.
+
+\subsection{Metrics and results}
+
+We assess recovery on three axes: (i) latent-skill recovery, the Pearson
+correlation between the true $\skill_\rider$ and the estimated $\hat\skill_\rider$;
+(ii) difficulty-shape recovery, summarised by the estimated location of the
+difficulty minimum $\hat\metric^\star = \arg\min_\metric \hat\diff(\metric)$,
+which should land near the true $18$~kn; and (iii) predictive gain, the held-out
+Brier Skill Score of the skill-conditioned model against the single-curve
+baseline under a stratified $80/20$ split. We also verify the backward-compatible
+identity of Section~\ref{sec:marginal}---that integrating skill out of the fitted
+model matches a single-curve fit---and that the identification gate of
+Section~\ref{sec:graph} passes on this (deliberately connected) cohort.
+
+Table~\ref{tab:recovery} reports the outcome. The model recovers latent skill at
+correlation $\thetaRecoveryCorr$ against ground truth; it locates the difficulty
+minimum at $\hat\metric^\star = \difficultyMinKnots$~knots, within $\pm 3$ knots of
+the true $18$-knot optimum; and it improves the held-out Brier Skill Score by
+$\heldOutBSSsigned$ over the single-curve baseline, confirming that
+skill-conditioning earns its added complexity out of sample rather than merely
+fitting the training data more flexibly. The recovered discrimination is
+$\hat{a} = \discriminationA$ (true $a_{\text{true}} = 2.0$), the marginal matches
+the single-curve fit, and the identification gate passes, all on
+$n_{\text{train}} = \nTrain$ training outcomes.
+
+\subsection{Reproducibility}
+\label{sec:repro}
+
+The experiment is a single command. Every value in Table~\ref{tab:recovery} is
+emitted by
+\begin{quote}
+  \verb|uv run inverse-suitability latent-demo --out DIR|
+\end{quote}
+which fits the reference cohort and writes a \texttt{stats.json}; the paper's
+table and inline figures are rendered directly from that file, so the reported
+numbers cannot drift from the code (Appendix~\ref{app:repro}). The run is
+deterministic (fixed cohort and fit seeds), completes in well under a minute on a
+laptop, touches no proprietary data, and requires no network access. The
+data-generating process is fully specified by \eqref{eq:dgp-delta} and
+Section~\ref{sec:dgp}; a reviewer can regenerate the cohort and re-fit
+independently.

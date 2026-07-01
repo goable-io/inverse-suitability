@@ -1,0 +1,39 @@
+% !!! GENERATED FILE -- DO NOT EDIT BY HAND !!!
+% Produced by reproducibility/gen_results_tex.py from the stats.json that
+% `inverse-suitability latent-demo` writes. Regenerate with `make repro`.
+% Every value below is a RECOVERED estimate; ground-truth DGP parameters are
+% stated as fixed prose in the surrounding section, never here.
+%
+% Inline macros (used in 05-synthetic-recovery.tex prose):
+\newcommand{\thetaRecoveryCorr}{0.96}
+\newcommand{\thetaRecoveryCorrFull}{0.9638}
+\newcommand{\difficultyMinKnots}{16.7}
+\newcommand{\discriminationA}{2.16}
+\newcommand{\heldOutBSS}{0.329}
+% signed, WITHOUT math delimiters -- wrap in $...$ at the call site.
+\newcommand{\heldOutBSSsigned}{+0.33}
+\newcommand{\nTrain}{2,400}
+%
+\begin{table}[t]
+  \centering
+  \caption{Synthetic recovery on the reference cohort ($80$ riders $\times\,30$
+  paired outcomes, $n_{\text{train}} = 2,400$). Every value is recovered
+  from behavioural outcomes alone by marginal maximum likelihood; none is supplied
+  to the fit. The data-generating difficulty is minimised at the ground-truth
+  optimum $x^\star = 18$~kn with true discrimination $a_{\text{true}} = 2.0$
+  (stated in the text, not fit here). Reproduced by a single command
+  (\texttt{inverse-suitability latent-demo}); see Appendix.}
+  \label{tab:recovery}
+  \begin{tabular}{@{}llr@{}}
+    \toprule
+    Quantity & Symbol & Recovered \\
+    \midrule
+    Latent-skill recovery (Pearson) & $\mathrm{corr}(\theta,\hat\theta)$ & 0.964 \\
+    Difficulty-minimum location     & $\hat{x}^\star$ (kn)               & 16.7 \\
+    Discrimination                  & $\hat{a}$                          & 2.16 \\
+    Held-out Brier skill score      & $\mathrm{BSS}$ vs.\ single curve   & $+0.329$ \\
+    Marginal matches single curve   & --                                    & \checkmark \\
+    Identification gate passed      & --                                    & \checkmark \\
+    \bottomrule
+  \end{tabular}
+\end{table}

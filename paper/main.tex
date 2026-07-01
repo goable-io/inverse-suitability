@@ -1,0 +1,79 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% Inverse Suitability: Identifying Condition Difficulty and Rider Skill from
+% Behavioural Outcomes via Continuous-Item Response Theory.
+%
+% arXiv preprint. Primary category: stat.AP; cross-list: stat.ME, physics.ao-ph.
+% Methodology paper validated by SYNTHETIC RECOVERY ONLY -- no empirical claim
+% on real riders anywhere. Build with tectonic:  make
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{microtype} % char protrusion + font expansion: removes most overfull boxes
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,allcolors=blue!55!black]{hyperref}
+\usepackage{natbib}
+\usepackage{amsfonts}
+\usepackage{bm}
+
+\graphicspath{{figures/}}
+
+\newcommand{\sigmoid}{\sigma}
+\newcommand{\skill}{\theta}
+\newcommand{\diff}{\delta}
+\newcommand{\rider}{r}
+\newcommand{\metric}{x}
+\newcommand{\site}{s}
+\DeclareMathOperator{\corr}{corr}
+
+\title{\textbf{Inverse Suitability: Identifying Condition Difficulty and\\
+Rider Skill from Behavioural Outcomes via\\ Continuous-Item Response Theory}}
+
+\author{%
+  Fabio Carucci\thanks{The method is developed and implemented within
+  \emph{Goable}'s environmental calibration engine. The reproducibility artifact
+  is the open command \texttt{inverse-suitability latent-demo}, released with the
+  paper source at \url{https://github.com/goable-io/inverse-suitability-paper}
+  (Section~\ref{sec:repro}). Correspondence: \texttt{research@goable.io}.}\\[2pt]
+  \emph{Goable} \\
+  \texttt{https://goable.io}%
+  % co-author placeholder -- add second author (endorser / academic partner) here
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\noindent\textbf{Keywords:} item response theory; latent-variable models;
+suitability scoring; marginal maximum likelihood; environmental decision science;
+skill identification.
+
+\input{sections/01-intro}
+\input{sections/02-related}
+\input{sections/03-model}
+\input{sections/04-identification}
+\input{sections/05-synthetic-recovery}
+\input{sections/06-atlas}
+\input{sections/07-governance}
+\input{sections/08-discussion}
+\input{sections/09-conclusion}
+\input{sections/10-availability}
+
+\appendix
+\input{appendix}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

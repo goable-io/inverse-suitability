@@ -1,0 +1,21 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.toc
+*.fls
+*.fdb_latexmk
+# main.pdf is committed (readers get the paper without building)
+
+# Reproducibility run outputs (stats.json etc.). The committed results.tex and
+# figures/difficulty-atlas.pdf are regenerated from these but checked in so the
+# paper builds without first running the pipeline.
+reproducibility/out/
+
+# Python
+__pycache__/
+*.pyc

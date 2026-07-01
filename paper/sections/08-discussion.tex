@@ -1,0 +1,45 @@
+\section{Discussion and applications}
+\label{sec:discussion}
+
+\paragraph{Skill-conditioned decision support.} The most direct application is
+scoring that adapts to a declared skill level. Because the difficulty term is
+shared and only the skill offset changes (Section~\ref{sec:model}), a single
+identified model yields a family of suitability surfaces---beginner through
+expert---at no additional fitting cost, each falling back invisibly to the
+population curve where the latent structure is not identified. The result is a
+verdict that answers ``hard for whom,'' not just ``hard on average.''
+
+\paragraph{An intrinsic-risk primitive for underwriting.} Parametric insurance for
+weather-dependent leisure needs to price the intrinsic risk of a site, not the
+muddled suitability of whoever currently frequents it. The difficulty atlas is a
+natural credibility primitive for such pricing: a difficulty coordinate per site
+and condition, anchored to physics, reproducible from a cohort hash, and
+independent of the clientele that a suitability curve would otherwise bake in. We
+note the connection without building it here.
+
+\paragraph{Limitations.} The paper's central limitation is deliberate and stated
+plainly: its validation is a \emph{synthetic recovery study}, not an empirical
+evaluation on real riders. We show that when data are generated from the model,
+the estimator recovers the ground truth; we do \emph{not} show that real
+behavioural outcomes follow the model, because no real cohort is analysed here.
+Several modelling simplifications accompany this scope. The discrimination $a$ is
+a single scalar rather than a function of the condition; difficulty is modelled
+one physical dimension at a time rather than jointly over the full condition
+vector (wind${\times}$wave${\times}$cold), which would strengthen realism at the
+cost of harder identification; and estimation is point-based marginal maximum
+likelihood, so the reported skills and difficulties are point estimates rather
+than full posteriors. Finally, identification requires a connected
+rider${\times}$condition graph (Section~\ref{sec:graph}); in real deployments many
+site${\times}$condition cells will not meet that bar and will---correctly---return
+the single-curve fallback rather than a latent fit.
+
+\paragraph{Future work.} Three extensions follow directly. First, \emph{empirical
+validation}: fit the model to real field cohorts as they accrue, and test the
+model's structural assumptions (for instance, whether the marginal identity of
+Section~\ref{sec:marginal} holds on real data, and whether the held-out skill
+gain persists out of sample). Second, \emph{full Bayesian inference} with a
+Gaussian-process difficulty, giving calibrated uncertainty bands on both the atlas
+and the skill posteriors. Third, \emph{multi-dimensional difficulty}, jointly
+identifying $\diff$ over the condition vector, which turns the per-dimension atlas
+into a genuine multi-driver difficulty surface. Each is compatible with the
+identification and governance framework established here.

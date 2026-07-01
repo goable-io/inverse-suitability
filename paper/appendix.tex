@@ -1,0 +1,71 @@
+\section{Estimation details}
+\label{app:estimation}
+
+\paragraph{Marginal maximum likelihood.} Writing $\Phi = (\diff, a)$ for the
+structural parameters and $p(\skill) = \mathcal{N}(0,1)$ for the population skill
+density, the marginal likelihood of rider $\rider$'s outcomes
+$\{(\metric_{ri}, y_{ri})\}_i$ is
+\begin{equation}
+  L_\rider(\Phi) = \int \prod_i
+    \sigmoid\!\big(a(\metric_{ri})(\skill - \diff(\metric_{ri}))\big)^{y_{ri}}
+    \big(1 - \sigmoid(\cdot)\big)^{1 - y_{ri}}\; p(\skill)\, d\skill .
+\end{equation}
+The EM algorithm alternates an E-step, which forms the posterior over each rider's
+skill on a fixed quadrature grid, and an M-step, which maximises the expected
+complete-data log-likelihood over $\Phi$. The full log-likelihood is
+$\sum_\rider \log L_\rider(\Phi)$.
+
+\paragraph{Gauss--Hermite quadrature.} The skill integral is evaluated by
+Gauss--Hermite quadrature \citep{golub1969}: nodes $\{z_q\}$ and weights
+$\{w_q\}$ approximate
+\begin{equation*}
+  \int f(\skill)\,\mathcal{N}(\skill;0,1)\,d\skill
+    \;\approx\; \sum_q w_q\, f(z_q)
+\end{equation*}
+after the standard change of variables. The node count
+trades accuracy against cost; the demonstration configuration uses a fixed grid
+adequate for a unimodal skill posterior.
+
+\paragraph{Difficulty representation and anchoring.} The difficulty function is
+represented on a metric grid and evaluated by interpolation. Its prior is centred
+on the physics-derived expert curve, which anchors the difficulty origin and scale
+(Section~\ref{sec:ident}); rare or unobserved conditions shrink toward that
+anchor. Rider skills carry the $\mathcal{N}(0,1)$ population prior, which both sets
+the location/scale convention and shrinks separated (all-success or all-failure)
+riders to finite values.
+
+\paragraph{Determinism.} Given a cohort and a seed, the estimator is
+deterministic---no stochastic sampling enters the point estimate---so results are
+bit-for-bit reproducible.
+
+\section{Data-generating process and reproducibility}
+\label{app:repro}
+
+\paragraph{Generator.} The reference cohort is drawn as in Section~\ref{sec:dgp}:
+$80$ riders, $30$ outcomes each; skills $\skill_\rider \sim \mathcal{N}(0,1)$;
+conditions uniform on $[3,35]$ knots; ground-truth difficulty
+\eqref{eq:dgp-delta} with optimum $\metric^\star = 18$~kn, width $w = 8$, floor
+$f = -1$; true discrimination $a_{\text{true}} = 2.0$; cohort seed fixed. Outcomes
+are Bernoulli draws from the model~\eqref{eq:model}. These are the ground-truth
+inputs to the \emph{generator} and are not provided to the fit.
+
+\paragraph{One-command reproduction.} The results in Table~\ref{tab:recovery} are
+produced by
+\begin{quote}
+  \verb|uv run inverse-suitability latent-demo --out DIR|
+\end{quote}
+which fits the cohort and writes \texttt{stats.json}. Under
+\texttt{reproducibility/}, the paper's results table and inline macros are
+rendered from that JSON by a small script (\texttt{gen\_results\_tex.py}), and the
+difficulty-atlas figure is rendered from the same package's difficulty and link
+functions (\texttt{gen\_figure.py}); \texttt{make repro} runs the whole
+chain and rebuilds the PDF. Because the reported numbers are generated from the
+code rather than transcribed, they cannot drift from it. The run is deterministic,
+completes in under a minute, and uses no proprietary data and no network access.
+
+\paragraph{Recovered versus ground-truth values.} For the avoidance of doubt: the
+values in Table~\ref{tab:recovery} are the estimator's \emph{recovered} outputs
+(for example, the difficulty minimum recovered at
+$\hat\metric^\star = \difficultyMinKnots$~kn). The value $\metric^\star = 18$~kn is
+the \emph{ground truth} supplied to the generator. The recovery claim is precisely
+that the former lands within $\pm 3$~kn of the latter.

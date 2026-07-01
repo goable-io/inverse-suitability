@@ -1,0 +1,82 @@
+\section{Identification and estimation}
+\label{sec:ident}
+
+Separating skill from difficulty is the make-or-break of the method. Three
+obstacles stand in the way, each with an explicit remedy; the estimator is
+otherwise the classical IRT one.
+
+\subsection{Scale indeterminacy}
+
+Because \eqref{eq:model} depends on skill and difficulty only through the
+difference $\skill_\rider - \diff(\metric,\site)$, adding a constant $c$ to every
+skill and to every difficulty leaves all outcome probabilities unchanged. Skill
+and difficulty are therefore identified only up to a common shift (and, with a
+free discrimination, a common scale). We use two devices with \emph{distinct
+roles}---one that secures identification, one that fixes interpretable units:
+\begin{enumerate}
+  \item \textbf{Location/scale on skill (identification).} We fix the population
+    skill distribution to $\mathbb{E}[\skill] = 0$ and
+    $\mathrm{Var}[\skill] = 1$---the standard IRT convention. This removes the
+    shift-and-scale freedom and is what makes $\skill$ and $\diff$ separately
+    identified, not merely their difference.
+  \item \textbf{Physical anchor on difficulty (units and prior).} Given
+    identification, $\diff$ is still expressed on an arbitrary scale. Anchoring it
+    to the physics-derived expert curve through its prior fixes the difficulty
+    origin and units to interpretable, physical quantities, and simultaneously
+    acts as a shrinkage prior for sparsely observed conditions
+    (Section~\ref{sec:sep}). It is not what identifies the model.
+\end{enumerate}
+
+\subsection{The data condition: a connected incidence graph}
+\label{sec:graph}
+
+Identification also requires the right \emph{coverage}. Form the bipartite
+incidence graph whose two vertex classes are riders and condition bins, with an
+edge whenever a rider is observed in a bin. Skill and difficulty separate only
+when this graph is \emph{connected}: riders must be observed across varied
+conditions, and conditions must be experienced by varied riders. The failure mode
+is intuitive---a rider who only ever goes out in easy conditions has a skill that
+is confounded with ``always succeeds,'' because nothing in the data forces the two
+apart. Before fitting, the estimator checks
+\begin{itemize}
+  \item connectivity of the rider${\times}$condition incidence graph;
+  \item at least $K$ distinct condition bins per rider;
+  \item at least $M$ riders per condition bin.
+\end{itemize}
+When these fail, the latent model \emph{auto-disables} and the estimator falls
+back to the single-curve marginal of Section~\ref{sec:marginal}. This is a
+deliberate refusal to over-claim: below the identification threshold, the honest
+output is the population curve, not a spuriously ``personalised'' one. It also
+makes the activation gate strictly stronger than a raw sample-size threshold---
+volume alone does not identify skill; repeated cross-condition observation does.
+
+\subsection{Separation and sparsity}
+\label{sec:sep}
+
+Two finite-sample pathologies remain. A rider with an all-success record drives
+$\skill \to +\infty$ (the classical separation problem in logistic models); a
+condition bin observed too rarely has an under-determined difficulty. Both are
+handled by shrinkage: rare skills shrink toward the population prior, and sparse
+difficulties shrink toward the expert-curve anchor. This keeps every estimate
+finite and well-defined without introducing new machinery beyond the priors
+already stated.
+
+\subsection{Estimator: marginal maximum likelihood}
+\label{sec:mml}
+
+We estimate by \emph{marginal maximum likelihood} via EM, the classical IRT
+estimator \citep{bock1981}. The skill of each rider is a latent variable; the
+marginal likelihood of the observed outcomes integrates it out against the
+population distribution $p(\skill) = \mathcal{N}(0,1)$. The E-step evaluates this
+integral by Gauss--Hermite quadrature \citep{golub1969}; the M-step maximises the
+difficulty function $\diff$ and the discrimination $a$ given the current
+quadrature weights. The procedure is deterministic---same data and same seed give
+the same result---which matches the reproducibility posture of
+Section~\ref{sec:governance} and adds no heavy sampling dependency.
+
+Full Bayesian estimation (for example Hamiltonian Monte Carlo with a Gaussian
+process difficulty) yields richer posterior uncertainty bands and is a documented
+upgrade; it is not required for the point-identification and recovery results of
+this paper, and we treat it as future work (Section~\ref{sec:discussion}). The
+per-rider skill posteriors and the difficulty function that the estimator returns
+are exactly the objects validated next.

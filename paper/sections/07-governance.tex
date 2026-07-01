@@ -1,0 +1,53 @@
+\section{Governance: reproducibility and privacy}
+\label{sec:governance}
+
+A latent model estimated from human behavioural data must be reproducible enough
+to audit and private enough to respect the people in it. The two requirements
+pull in opposite directions---auditability wants to retain data, privacy wants to
+delete it---and the design resolves them by separating what is anonymous from what
+is personal.
+
+\subsection{Reproducible by construction}
+
+Each fit is pinned to a content hash of the exact cohort it consumed (a SHA-256 of
+the canonicalised outcome table). A cited estimate---a difficulty function or a
+rider's skill posterior from cohort hash $\mathtt{abc123\ldots}$---can be
+re-derived by re-running the estimator on the cohort that hash references, without
+the authors' cooperation. Combined with the deterministic marginal-maximum-
+likelihood estimator (Section~\ref{sec:mml}), this makes every published number
+independently checkable: same cohort hash and same seed yield the same posterior.
+Storing fits append-only, keyed by cohort hash, additionally turns a rider's skill
+estimates over successive cohorts into a trajectory---a signal for whether skill
+estimates are stable or drift after a regime change.
+
+\subsection{Privacy: the anonymous--personal split}
+
+The two output classes have different privacy status, and the split is the crux.
+\begin{itemize}
+  \item The \textbf{difficulty atlas} $\hat\diff(\metric,\site)$ is a property of
+    a \emph{place}, not a person. It carries no per-rider information and is
+    therefore anonymous; it survives deletion requests, in the same way that
+    aggregate statistics do.
+  \item The \textbf{skill posteriors} $\hat\skill_\rider$ are per-person
+    attributes and are treated as sensitive: on a rider's opt-out, every skill
+    estimate for that rider is hard-deleted across all cohort versions. Deletion
+    is a fan-out over the append-only history, not merely a removal of the latest
+    value.
+\end{itemize}
+This separation is what lets the atlas remain a durable, publishable scientific
+artifact while the personal layer remains fully erasable. An anonymised public
+export of the atlas---generalised in space and lagged in time, released only for
+cells with enough distinct contributors---follows the same governance as other
+anonymised environmental exports and does not depend on retaining any individual's
+data.
+
+\subsection{Skill is an input, not an inference}
+
+Finally, a boundary that is as much a governance choice as a modelling one:
+skill-conditioned scoring (Section~\ref{sec:model}) takes the skill level as an
+\emph{explicit, caller-provided} input. The score for ``expert'' conditions is the
+expert curve; the system does not infer a person's skill from their identity in
+order to score them. This keeps the objective, physics-anchored difficulty curve
+separate from any automatic profiling of individuals---skill-conditioned physics,
+not personalisation---and it means the difficulty atlas can be built and used
+without ever attaching a skill estimate to a named person.
